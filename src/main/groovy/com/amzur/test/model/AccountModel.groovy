@@ -4,10 +4,11 @@ package com.amzur.test.model
 import com.amzur.test.domain.UserDomain
 
 class AccountModel {
+    Long id
     String bankName
     String accountNumber
     String upiPin
-    Double balance=100000.0
-    Double transactionLimit
+    BigDecimal balance = 100000
+    BigDecimal transactionLimit
     UserDomain user
 }

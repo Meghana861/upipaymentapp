@@ -16,7 +16,7 @@ class UserDomain {
         lastName nullable: true
         email email: true, nullable: true
         mobileNumber unique: true, nullable: true
-        pin nullable: true
+        pin size: 6..6, nullable: false
     }
 }
 

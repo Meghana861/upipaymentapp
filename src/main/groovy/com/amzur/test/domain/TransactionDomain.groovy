@@ -4,15 +4,12 @@ import grails.gorm.annotation.Entity
 
 @Entity
 class TransactionDomain {
-        AccountDomain senderAccount
-        String receiverMobileNumber
-        Double amount
-        Date transactionDate
-        Date transactionTime
+        Long id
+        BigDecimal amount
+        String receiver
+        Date transactionDate = new Date()
+        Date transactionTime =new Date()
 
-        static belongsTo = [senderAccount: AccountDomain]
-        def beforeInsert() {
-        transactionDate = new Date()
-        transactionTime = new Date()
+        static belongsTo = [account: AccountDomain]
     }
-    }
+
