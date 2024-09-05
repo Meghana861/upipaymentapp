@@ -12,3 +12,4 @@ class Application {
         Micronaut.run(Application)
     }
 }
+

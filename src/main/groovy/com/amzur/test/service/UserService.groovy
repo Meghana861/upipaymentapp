@@ -28,16 +28,24 @@ class UserService {
     }
 
 
+
     @Transactional
-    def getLoginByMobileNumberAndPin(String mobileNumber,String pin){
+    def getLoginByMobileNumberAndPin(String mobileNumber, String pin) {
         UserDomain userDomain = UserDomain.findByMobileNumberAndPin(mobileNumber, pin)
-        if(userDomain){
-            return "Login Successfully"
-        }
-        else{
-            return  "Invalid Credentials"
+        if (userDomain) {
+            return new UserModel(
+                    id: userDomain.id,
+                    firstName: userDomain.firstName,
+                    lastName: userDomain.lastName,
+                    email: userDomain.email,
+                    mobileNumber: userDomain.mobileNumber,
+                    pin: userDomain.pin
+            )
+        } else {
+            throw new IllegalArgumentException("Invalid Credentials")
         }
     }
+
 
 
     @Transactional

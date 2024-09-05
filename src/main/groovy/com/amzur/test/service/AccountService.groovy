@@ -29,13 +29,17 @@ class AccountService {
                     upiPin: accountDomain.upiPin,
                     balance: accountDomain.balance,
                     transactionLimit: accountDomain.transactionLimit,
-                    //user: accountDomain.user
+
             )
         return accountModels
         }
 
 
-
+    @Transactional
+    def getAllBankNames() {
+        def bankNames = AccountDomain.executeQuery('SELECT DISTINCT a.bankName FROM AccountDomain a')
+        return bankNames
+    }
 
     @Transactional
     def getAllAccountsByUserId(Long userId) {
@@ -43,7 +47,6 @@ class AccountService {
         if (user) {
             def userAccounts = AccountDomain.findAllByUser(user)
 
-            // Convert each AccountDomain instance to AccountModel
             def accountModels = userAccounts.collect { accountDomain ->
                 new AccountModel(
                         id: accountDomain.id,
@@ -52,11 +55,27 @@ class AccountService {
                         upiPin: accountDomain.upiPin,
                         balance: accountDomain.balance,
                         transactionLimit: accountDomain.transactionLimit,
-                        //user: accountDomain.user
+
                 )
             }
 
             return accountModels
+        }
+    }
+
+    @Transactional
+    def getAccountById(Long id) {
+        def accountDomain = AccountDomain.findById(id)
+        if (accountDomain) {
+            return new AccountModel(
+                    id: accountDomain.id,
+                    bankName: accountDomain.bankName,
+                    accountNumber: accountDomain.accountNumber,
+                    upiPin: accountDomain.upiPin,
+                    balance: accountDomain.balance,
+                    transactionLimit: accountDomain.transactionLimit
+
+            )
         }
     }
 }
