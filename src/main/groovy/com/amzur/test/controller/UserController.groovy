@@ -67,7 +67,7 @@ class UserController {
     def deleteById(@PathVariable Long id){
         def deleteUser= userService.deleteById(id)
         if(deleteUser){
-            return HttpResponse.noContent()
+            return "Deleted Successfully"
         }
         else{
             return HttpResponse.notFound("User Not Found with id ${id}")

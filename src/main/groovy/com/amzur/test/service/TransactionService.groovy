@@ -8,6 +8,7 @@ import com.amzur.test.model.TransactionModel
 import grails.gorm.transactions.Transactional
 
 import javax.inject.Singleton
+import java.text.SimpleDateFormat
 
 @Singleton
 class TransactionService {
@@ -74,11 +75,41 @@ class TransactionService {
     }
 
 
+    @Transactional
+    def getTransactionHistory(String mobileNumber) {
+
+        def user = UserDomain.findByMobileNumber(mobileNumber)
+
+        if (!user) {
+            throw new IllegalArgumentException("User not found")
+        }
+
+
+        def transactionList = TransactionDomain.findAllBySenderMobileNumberOrReceiverMobileNumber(mobileNumber, mobileNumber)
+
+        if (transactionList.isEmpty()) {
+            return "No transactions found for this user"
+        }
+
+
+        def transactionHistory = transactionList.collect { transaction ->
+            new TransactionModel(
+                    senderMobileNumber: transaction.senderMobileNumber,
+                    receiverMobileNumber: transaction.receiverMobileNumber,
+                    amount: transaction.amount,
+                    transactionDate: transaction.transactionDate,
+                    transactionTime: transaction.transactionTime
+            )
+        }
+
+        return transactionHistory
+    }
 }
-//    @Transactional
-//    def getAllTransactionListByAccountId(String accountId){
-//
-//    }
+
+
+
+
+
 
 
 

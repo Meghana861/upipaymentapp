@@ -23,9 +23,25 @@ class UserService {
 
     @Transactional
     def getAllUsers() {
-        List<UserDomain> userDomain = UserDomain.findAll()
-        return userDomain
+        List<UserDomain> userDomains = UserDomain.findAll()
+
+        if (userDomains) {
+
+            return userDomains.collect { userDomain ->
+                new UserModel(
+                        id: userDomain.id,
+                        firstName: userDomain.firstName,
+                        lastName: userDomain.lastName,
+                        email: userDomain.email,
+                        mobileNumber: userDomain.mobileNumber,
+                        pin: userDomain.pin
+                )
+            }
+        } else {
+            return []
+        }
     }
+
 
 
 
@@ -59,14 +75,32 @@ class UserService {
             userDomain.pin= updatedUserModel.pin
             userDomain.save()
         }
-        return userDomain
+        if (userDomain) {
+            return new UserModel(
+                    id: userDomain.id,
+                    firstName: userDomain.firstName,
+                    lastName: userDomain.lastName,
+                    email: userDomain.email,
+                    mobileNumber: userDomain.mobileNumber,
+                    pin: userDomain.pin
+            )
+        }
     }
 
 
     @Transactional
     def getUserById(Long id){
         UserDomain userDomain=UserDomain.findById(id)
-        return userDomain
+        if (userDomain) {
+            return new UserModel(
+                    id: userDomain.id,
+                    firstName: userDomain.firstName,
+                    lastName: userDomain.lastName,
+                    email: userDomain.email,
+                    mobileNumber: userDomain.mobileNumber,
+                    pin: userDomain.pin
+            )
+        }
     }
 
 
@@ -75,7 +109,7 @@ class UserService {
         UserDomain userDomain=UserDomain.findById(id)
         if(userDomain){
             userDomain.delete()
-            return true
+            return "deleted successfully"
         }
         else{
             return false
