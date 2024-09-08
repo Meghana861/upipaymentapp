@@ -13,7 +13,7 @@ class AccountDomain {
         String upiPin
         Double balance = 100000
         Double transactionLimit
-
+        Boolean isPrimary
         static belongsTo = [user: UserDomain]
 
         static constraints = {

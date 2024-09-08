@@ -7,11 +7,14 @@ import com.amzur.test.model.AccountModel
 import com.amzur.test.model.TransactionModel
 import grails.gorm.transactions.Transactional
 
+import javax.inject.Inject
 import javax.inject.Singleton
 import java.text.SimpleDateFormat
 
 @Singleton
 class TransactionService {
+    @Inject
+    AccountService accountService
 
     @Transactional
     def transferMoney(String senderMobileNumber, String receiverMobileNumber, BigDecimal amount, String upiPin) {
@@ -27,9 +30,13 @@ class TransactionService {
             return "Invalid UPI Pin"
         }
 
-        AccountDomain receiverAccount = AccountDomain.findByUser(receiver)
+        AccountDomain receiverAccount = accountService.findPrimaryAccount(receiver)
         if (!receiverAccount) {
-            return "Receiver Not Found"
+            receiverAccount = accountService.findByUser(receiver)?.first()
+        }
+
+        if (!receiverAccount) {
+            return "Receiver Account Not Found"
         }
 
         if (senderAccount.balance < amount) {
@@ -104,6 +111,8 @@ class TransactionService {
 
         return transactionHistory
     }
+
+
 }
 
 

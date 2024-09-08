@@ -11,4 +11,5 @@ class AccountModel {
     BigDecimal balance = 100000
     BigDecimal transactionLimit
     UserDomain user
+    Boolean isPrimary
 }
