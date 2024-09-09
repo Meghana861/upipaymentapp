@@ -7,7 +7,7 @@ class TransactionDomain {
         String senderMobileNumber
         BigDecimal amount
         String receiverMobileNumber
-        String upiPin
+//        String upiPin
         Date transactionDate = new Date()
         Date transactionTime =new Date()
 

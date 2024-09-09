@@ -25,7 +25,7 @@ class TransactionService {
             return "Sender or Receiver Not Found"
         }
 
-        AccountDomain senderAccount = AccountDomain.findByUserAndUpiPin(sender, upiPin)
+        AccountDomain senderAccount = AccountDomain.findByUser(sender)
         if (!senderAccount) {
             return "Invalid UPI Pin"
         }
@@ -58,7 +58,6 @@ class TransactionService {
                     senderMobileNumber: senderMobileNumber,
                     receiverMobileNumber: receiverMobileNumber,
                     amount: amount,
-                    upiPin: upiPin,
                     transactionDate: new Date(),
                     transactionTime: new Date(),
                     senderAccount: senderAccount

@@ -23,23 +23,27 @@ class TransactionController {
 
     @Post
     def transferMoney(@Body TransferRequest transferRequest) {
-
         String senderMobileNumber = transferRequest.senderMobileNumber
         String receiverMobileNumber = transferRequest.receiverMobileNumber
         BigDecimal amount = transferRequest.amount
         String upiPin = transferRequest.upiPin
 
+        def transaction = transactionService.transferMoney(senderMobileNumber, receiverMobileNumber, amount, upiPin)
 
-        def transaction=transactionService.transferMoney(senderMobileNumber, receiverMobileNumber, amount, upiPin)
-        String message = """{
-                senderMobileNumber: "${transaction.senderMobileNumber}",
-                receiverMobileNumber:" ${transaction.receiverMobileNumber}",
-                amount: "${transaction.amount}",
-                transactionDate:"${transaction.transactionDate}",
-                transactionTime:"${transaction.transactionTime}"
+        // Ensure transaction is an object and not a string
+        if (transaction instanceof TransactionModel) {
+            String message = """{
+                "senderMobileNumber": "${transaction.senderMobileNumber}",
+                "receiverMobileNumber": "${transaction.receiverMobileNumber}",
+                "amount": "${transaction.amount}",
+                "transactionDate": "${transaction.transactionDate}",
+                "transactionTime": "${transaction.transactionTime}"
         }"""
-        kafkaProducerClient.sendMessage("payment-topic", message)
-        return HttpResponse.ok([message: "Transferred Money Successfully"])
+            kafkaProducerClient.sendMessage("payment-topic", message)
+            return HttpResponse.ok([message: "Transferred Money Successfully"])
+        } else {
+            return HttpResponse.badRequest([message: transaction]) // transaction contains the error message
+        }
     }
     @Get("/history/{mobileNumber}")
     def getTransactionHistory(@PathVariable String mobileNumber) {
